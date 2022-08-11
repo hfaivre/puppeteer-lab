@@ -19,9 +19,13 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ['--window-size=800,500']
+  });
   const page = await browser.newPage();
   await page.goto('http://example.com');
+  await page.waitForTimeout(4000);
   await page.screenshot({path: 'example.png'});
   await browser.close();
 })();
