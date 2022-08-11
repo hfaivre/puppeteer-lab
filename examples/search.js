@@ -24,7 +24,10 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: false,
+    args: ['--window-size=800,500']
+  });
   const page = await browser.newPage();
 
   await page.goto('https://developers.google.com/web/');
@@ -38,7 +41,7 @@ const puppeteer = require('puppeteer');
   await page.click(allResultsSelector);
 
   // Wait for the results page to load and display the results.
-  const resultsSelector = '.gsc-results .gs-title';
+  const resultsSelector = '.gsc-result .gs-title';
   await page.waitForSelector(resultsSelector);
 
   // Extract the results from the page.
@@ -49,6 +52,8 @@ const puppeteer = require('puppeteer');
       return `${title} - ${anchor.href}`;
     });
   }, resultsSelector);
+  await page.waitForTimeout(4000)
+
   console.log(links.join('\n'));
 
   await browser.close();
